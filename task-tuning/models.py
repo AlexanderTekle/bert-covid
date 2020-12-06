@@ -115,7 +115,7 @@ class PretrainedBertMLP(nn.Module):
     def __init__(self, args):
         super().__init__()
         print("before")
-        self.bert = BertModel.from_pretrained('./covid4-smallesttrain')
+        self.bert = BertModel.from_pretrained('./model')
         print("after")
         self.fc = nn.Linear(args.n_bert_hid, args.n_cls)
 
