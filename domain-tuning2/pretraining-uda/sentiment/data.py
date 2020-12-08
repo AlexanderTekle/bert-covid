@@ -48,7 +48,8 @@ class TextDataset(Dataset):
 
     def unpack(self, i):
         entry = self.df.iloc[i]
-        return (str(entry['text']), entry['label'])
+        #return (str(entry['text']), entry['label'])
+        return (str(entry['text']))
 
     def __len__(self):
         return len(self.df)
@@ -56,10 +57,10 @@ class TextDataset(Dataset):
     def __getitem__(self, i):
         res = self._cache.get(i, None)
         if res is None:
-            text, label = self.unpack(i)
+            text = self.unpack(i)
             text_tensor, len_tensor = prepare_text(text)
-            label_tensor = prepare_label(label)
-            res = (text_tensor, len_tensor, label_tensor)
+            #label_tensor = prepare_label(label)
+            res = (text_tensor, len_tensor) #deleted here label_tensor
             self._cache[i] = res  # cache inputs
         return res
 

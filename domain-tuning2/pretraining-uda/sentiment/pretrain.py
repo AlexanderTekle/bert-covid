@@ -68,7 +68,7 @@ def train(train_ds_list):
     global_steps = 0.
     train_loader = create_loader_multiple(args, train_ds_list)
     optimizer.zero_grad()
-    for i, (x, x_len, _) in enumerate(train_loader, 1):
+    for i, (x, x_len) in enumerate(train_loader, 1):
         x_in, x_out = create_pretraining_inputs(x)
         logits = model(x_in, x_len)[0].transpose(1, 2)  # [bs, vocab, seq_len]
         loss = criterion(logits, x_out)
@@ -119,28 +119,31 @@ test_ds_list = []
 
 if args.src_p > 0:
     train_ds_list.append(
-        TextDataset(f'amazon/{args.src}_train.csv', args.src_p)
+        TextDataset('train-titles.csv', args.src_p)
     )
     valid_ds_list.append(
-        TextDataset(f'amazon/{args.src}_valid.csv', args.src_p)
+        TextDataset(f'valid-titles.csv', args.src_p)
     )
     test_ds_list.append(
-        TextDataset(f'amazon/{args.src}_test.csv', args.src_p)
+        TextDataset(f'test-titles.csv', args.src_p)
     )
 
 if args.trg_p > 0:
     train_ds_list.append(
-        TextDataset(f'amazon/{args.trg}_train.csv', args.trg_p)
+        TextDataset(f'train-titles.csv', args.trg_p)
     )
     valid_ds_list.append(
-        TextDataset(f'amazon/{args.trg}_valid.csv', args.trg_p)
+        TextDataset(f'valid-titles.csv', args.trg_p)
     )
     test_ds_list.append(
-        TextDataset(f'amazon/{args.trg}_test.csv', args.trg_p)
+        TextDataset(f'test-titles.csv', args.trg_p)
     )
 
 if args.train:
     for epoch in range(1, args.epochs + 1):
+        print(args.src_p, args.trg_p)
+        print(train_ds_list[0].__len__())
+        #print(train_ds_list[0].__getitem__(10))
         train_loss = train(train_ds_list)
         valid_loss = test(valid_ds_list)
         if valid_loss < best_loss:
